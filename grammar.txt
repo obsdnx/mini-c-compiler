@@ -1,0 +1,152 @@
+program ->  extern_list decl_list 
+
+           | decl_list
+
+extern_list ->  extern extern_list_prime
+
+external_list_prime ->  extern_list_prime | epsilon
+
+ 
+
+               |  extern
+
+extern ->  "extern" type_spec IDENT "(" params ")" ";"
+
+ 
+
+decl_list ->  decl decl_list_prime
+
+decl_list_prime ->  decl decl_list_prime | epsilon
+
+decl ->  var_decl 
+
+      |  fun_decl
+
+var_decl ->  var_type IDENT ";" 
+
+type_spec ->  "void"
+
+             |  var_type           
+
+var_type  ->  "int" |  "float" |  "bool"
+
+fun_decl ->  type_spec IDENT "(" params ")" block
+
+params ->  param_list  |  "void" | epsilon
+
+ 
+
+param_list ->  param param_list_prime
+
+param_list_prime ->  “,” param param_list_prime |  epsilon
+
+ 
+
+  param ->  var_type IDENT
+
+  block ->  "{" local_decls stmt_list "}"
+
+  local_decls ->  epsilon local_decls_prime 
+
+local_decls_prime ->  local_decl local_decls_prime | epsilon 
+
+  local_decl ->  var_type IDENT ";"
+
+  stmt_list ->  stmt_list stmt 
+
+             |  epsilon
+
+  stmt ->  expr_stmt 
+
+        |  block 
+
+        |  if_stmt 
+
+        |  while_stmt 
+
+        |  return_stmt
+
+  expr_stmt ->  expr ";" 
+
+             |  ";"
+
+  while_stmt ->  "while" "(" expr ")" stmt 
+
+  if_stmt ->  "if" "(" expr ")" block else_stmt
+
+  else_stmt  ->  "else" block
+
+              |  epsilon
+
+  return_stmt ->  "return" ";" 
+
+               |  "return" expr ";" 
+
+ 
+ 
+
+expr ->  IDENT "=" expr
+| or_expr
+
+ 
+or_expr ->  and_expr or_expr_prime
+
+or_expr_prime ->  "||"and_expr or_expr_prime | epsilon
+
+ 
+
+and_expr := equality_expr and_expr_prime
+
+and_expr_prime := "&&" equality_expr and_expr_prime | epsilon
+
+ 
+
+equality_expr ->  relational_expr equality_expr_prime 
+
+equality_expr_prime ->  ("==" | "!=")relational_expr equality_expr_prime | epsilon
+
+ 
+
+relational_expr ->  additive_expr relational_expr_prime
+
+relational_expr_prime ->  ("<" | "<=" | ">" | ">=") additive_expr relational_expr_prime  | epsilon
+
+ 
+
+additive_expr ->  multiplicative_expr additive_expr_prime
+
+additive_expr_prime ->  ("+" | "-") multiplicative_expr additive_expr_prime  | epsilon
+
+ 
+
+multiplicative_expr ->  unary_expr multiplicative_expr_prime
+
+multiplicative_expr_prime ->  ("*" | "/" | "%") unary_expr multiplicative_expr_prime | epsilon
+
+ 
+
+unary_expr ->  "-" unary_expr
+
+             | "!" unary_expr
+
+             | primary
+
+ 
+
+primary ->  IDENT
+
+          | IDENT "(" args ")"
+
+          | INT_LIT
+
+          | FLOAT_LIT
+
+          | BOOL_LIT
+
+          | "(" expr ")"
+
+
+      List of all non terminals 
+
+args_list ->  expr args_list_prime
+args_list_prime ->  "," expr args_list_prime | epsilon
